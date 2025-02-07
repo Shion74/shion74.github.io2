@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Info Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .movie-info {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Movie Info Finder</h2>
+        <input type="text" id="movieTitle" placeholder="Enter movie title">
+        <button onclick="searchMovie()">Search</button>
+        <div class="movie-info" id="movieInfo"></div>
+    </div>
+
+    <script>
+        async function searchMovie() {
+            const title = document.getElementById('movieTitle').value;
+            const apiKey = 'c211749c';
+            const url = `https://www.omdbapi.com/?t=${title}&apikey=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.Response === "True") {
+                    document.getElementById('movieInfo').innerHTML = `
+                        <h3>${data.Title} (${data.Year})</h3>
+                        <img src="${data.Poster}" alt="Movie Poster">
+                        <p><strong>Director:</strong> ${data.Director}</p>
+                        <p><strong>Plot:</strong> ${data.Plot}</p>
+                        <p><strong>IMDB Rating:</strong> ${data.imdbRating}</p>
+                    `;
+                } else {
+                    document.getElementById('movieInfo').innerHTML = `<p style="color:red;">Movie not found!</p>`;
+                }
+            } catch (error) {
+                document.getElementById('movieInfo').innerHTML = `<p style="color:red;">Error fetching data.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
